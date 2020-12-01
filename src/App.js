@@ -1,6 +1,15 @@
 import React from 'react';
 import './App.css';
 
+// pure function
+function sum(a, b) {
+    return a + b;
+}
+// impure function
+function withdraw(account, amount) {
+    account.total -= amount;
+}
+
 function WelcomeFn(props) {
     return <h1>Hello, {props.name}</h1>;
 }
