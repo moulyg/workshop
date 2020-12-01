@@ -1,30 +1,115 @@
 import React from 'react';
 import './App.css';
 
-// pure function
-function sum(a, b) {
-    return a + b;
-}
-// impure function
-function withdraw(account, amount) {
-    account.total -= amount;
-}
 
-function WelcomeFn(props) {
-    return <h1>Hello, {props.name}</h1>;
-}
+class LifeCycle extends React.Component {
 
-class WelcomeCls extends React.Component {
+    constructor(props) {
+        super(props);
+        console.log("constructor");
+        this.state = {
+            count: 0
+        }
+    }
+
+    static getDerivedStateFromProps() {
+        console.log("getDerivedStateFromProps");
+        return null;
+    }
+
+    componentDidMount() {
+        console.log("componentDidMount");
+    }
+
+    componentDidUpdated() {
+        console.log("componentDidMount");
+    }
+
+    componentWillUnmount() {
+        console.log("componentWillUnmount");
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        console.log("shouldComponentUpdate");
+        if (nextState.count === 4) {
+            return false;
+        }
+        return  true;
+    }
+
+
+    getSnapshotBeforeUpdate(prevProps, prevState) {
+        console.log("getSnapshotBeforeUpdate", prevProps, prevState);
+        return prevState.count;
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        console.log("componentDidUpdate", prevProps, prevState, snapshot);
+    }
+
     render() {
-        return <h1>Hello, {this.props.name}</h1>;
+        console.log("render");
+        return <div>
+            <div>
+                <div>
+
+                    <span style={{width: '100px', display: 'block'}}>Count:</span>
+
+                    <small>{this.state.count}</small>
+                </div>
+                <hr/>
+            </div>
+            <button onClick={() => this.setState({count: this.state.count + 1})}>Add</button>
+            <button onClick={() => this.forceUpdate()}>Force Update</button>
+        </div>;
     }
 }
 
-function App() {
-    return (<>
-        <WelcomeFn name="Kandy Tuskers"/>
-        <WelcomeCls name="Galle Gladiators"/>
-    </>);
+class App extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            show: true,
+            title: 'LPL'
+        }
+        this.updateStateDirectly = this.updateStateDirectly.bind(this);
+    }
+
+    updateStateDirectly() {
+        this.state.show = false;
+    }
+
+    updateState() {
+        // Wrong
+        this.setState({
+            show: !this.state.show,
+        });
+
+        // Correct
+        /*this.setState((state, props) => ({
+            show: !state.show
+        }));*/
+    }
+
+    render() {
+        return <div>
+            <h1>{this.state.title}</h1>
+            <hr />
+            {this.state.show && <LifeCycle/>}
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <button onClick={() => this.updateState()}>{this.state.show ? 'Hide': 'Show'}</button>
+
+            <br />
+            <hr />
+            Show: {this.state.show ? 'True': 'False'}
+            <hr />
+            <button onClick={() => this.updateStateDirectly()}>Update State Directly</button>
+        </div>;
+    }
 }
 
 export default App;
