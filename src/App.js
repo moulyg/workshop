@@ -1,25 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
 
+function getGreeting(user) {
+    if (user) {
+        return <h1>Hello, {user}!</h1>;
+    }
+    return <h1>Hello, Stranger.</h1>;
+}
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+    const name = 'Mouly Guanrathne';
+    const title = '<h1>mouly</h1><img src="" onerror="alert(\'ad\')" />'
+    return (<>
+        <h1>Hello, {name}</h1>
+        <h1>Hello, {getGreeting(name)}</h1>
+        <h1>Hello, {getGreeting(null)}</h1>
+        <a href='#' title={name}>name</a>
+        <div>{title}</div>
+        {/*<div dangerouslySetInnerHTML={{__html: title}} />*/}
+    </>);
 }
 
 export default App;
