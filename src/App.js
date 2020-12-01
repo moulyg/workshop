@@ -3,38 +3,44 @@ import './App.css';
 
 class App extends React.Component {
 
-    constructor() {
-        super();
-        this.state = {
-            count: 0
+    constructor(props) {
+        super(props);
+        this.handleLoginClick = this.handleLoginClick.bind(this);
+        this.handleLogoutClick = this.handleLogoutClick.bind(this);
+        this.state = {isLoggedIn: false};
+    }
+
+    handleLoginClick() {
+        this.setState({isLoggedIn: true});
+    }
+
+    handleLogoutClick() {
+        this.setState({isLoggedIn: false});
+    }
+    greeting(props) {
+        const isLoggedIn = props.isLoggedIn;
+        if (isLoggedIn) {
+            return <h1>Hi, User</h1>;
         }
-        this.updateState = this.updateState.bind(this);
+        return <h1>Hi Guest</h1>;
     }
-
-    clickEvent() {
-        alert('Foo')
-    }
-
-    clickWithArgument(text) {
-        alert(text)
-    }
-
-    updateState() {
-        this.setState((state, props) => ({
-            count: state.count + 1
-        }));
-    }
-
 
     render() {
-        return <div>
-            <button onClick={this.clickEvent}>Click Event</button>
-            <hr/>
-            <button onClick={this.updateState}>Update State ({this.state.count})</button>
-            <hr/>
-            <button onClick={() => this.clickWithArgument('2020')}>Delete Row</button>
-            <button onClick={this.clickWithArgument.bind(this, '2024')}>Delete Row</button>
-        </div>;
+        const isLoggedIn = this.state.isLoggedIn;
+        let button;
+        if (isLoggedIn) {
+            button = <button onClick={this.handleLogoutClick}>Log Out</button>;
+        } else {
+            button = <button onClick={this.handleLoginClick}>Login</button>;
+        }
+
+        return (
+            <div>
+                {this.greeting(this.state)}
+                {button}
+                {isLoggedIn && <p>This is secured area</p>}
+            </div>
+        );
     }
 }
 
