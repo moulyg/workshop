@@ -1,29 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 
-function FancyBorder(props) {
+function App() {
+    // Declare a new state variable, which we'll call "count"
+    const [count, setCount] = useState(0);
+
     return (
-        <div className={'App-header'}>
-            {props.children}
+        <div>
+            <p>You clicked {count} times</p>
+            <button onClick={() => setCount(count + 1)}>
+                Click me
+            </button>
         </div>
     );
 }
 
-class App extends React.Component {
-
-
-    render() {
-        return (
-            <FancyBorder color="blue">
-                <h1 className="Dialog-title">
-                    Welcome
-                </h1>
-                <p className="Dialog-message">
-                    Thank you for visiting our spacecraft!
-                </p>
-            </FancyBorder>
-        );
-    }
-}
 
 export default App;
