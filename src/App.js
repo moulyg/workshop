@@ -1,25 +1,83 @@
-import './App.css';
+import React, {Component} from 'react';
 
-function getGreeting(user) {
-    if (user) {
-        return <h1>Hello, {user}!</h1>;
+const API = 'https://hn.algolia.com/api/v1/search?query=';
+const DEFAULT_QUERY = 'react';
+
+class App extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            hits: [],
+            loading: false,
+            page: 1,
+        };
+        this.setLoading = this.setLoading.bind(this);
+        this.loadMore = this.loadMore.bind(this);
     }
-    return <h1>Hello, Stranger.</h1>;
+
+    setLoading(loading) {
+        this.setState({loading})
+    }
+
+    deleteItem = (index) => {
+        let hits = [...this.state.hits];
+        if (index > -1) {
+            hits.splice(index, 1);
+            this.setState({hits});
+        }
+
+    }
+
+    loadMore() {
+        this.loadHits(this.state.page + 1);
+    }
+
+    componentDidMount() {
+        this.setLoading(true);
+        this.loadHits(1)
+    }
+
+    loadHits = (page) => {
+        fetch(API + DEFAULT_QUERY + '&page=' + page)
+            .then(response => response.json())
+            .then(data => this.setState({hits: [...this.state.hits, ...data.hits], page: data.page}))
+            .finally(() => this.setLoading(false));
+    }
+
+    render() {
+        const {loading, hits} = this.state;
+        return (
+            <>
+                {loading && <p>Loading...</p>}
+                {!loading && <table className='table table-dark table-striped'>
+                    <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Created At</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {hits.map((item, index) => <tr key={item.objectID}>
+                        <td>{item.title}</td>
+                        <td>{item.author}</td>
+                        <td>{item.created_at}</td>
+                        <td>
+                            <button onClick={() => this.deleteItem(index)} className='btn btn-danger'>Delete</button>
+                        </td>
+                    </tr>)}
+                    </tbody>
+                </table>}
+                {!loading && <div className='d-flex justify-content-center pb-3'>
+                    <button className='btn btn-primary' onClick={this.loadMore}>Load More</button>
+                </div>}
+            </>
+        );
+    }
+
 }
 
-function App() {
-
-
-    const name = 'Mouly Guanrathne';
-    const title = '<h1>mouly</h1><img src="" onerror="alert(\'ad\')" />'
-    return (<>
-        <h1>Hello, {name}</h1>
-        <h1>Hello, {getGreeting(name)}</h1>
-        <h1>Hello, {getGreeting(null)}</h1>
-        <a href='#' title={name}>name</a>
-        <div>{title}</div>
-        {/*<div dangerouslySetInnerHTML={{__html: title}} />*/}
-    </>);
-}
 
 export default App;
