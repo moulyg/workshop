@@ -1,24 +1,23 @@
 import './App.css';
+import React, {useCallback, useRef, useState} from "react";
 
-function getGreeting(user) {
-    if (user) {
-        return <h1>Hello, {user}!</h1>;
-    }
-    return <h1>Hello, Stranger.</h1>;
+const useRefCount = () => {
+    const ref = useRef(0);
+    console.log("current", ref.current++)
 }
-
+const Greeting = React.memo(({increment}) =>{
+    useRefCount();
+    return <button onClick={increment}>Increase</button>;
+});
 function App() {
+    const [count, setCount] = useState(0);
 
-
-    const name = 'Mouly Guanrathne';
-    const title = '<h1>mouly</h1><img src="" onerror="alert(\'ad\')" />'
+    const increment = useCallback(() => {
+        setCount(c => c + 1);
+    }, [setCount])
     return (<>
-        <h1>Hello, {name}</h1>
-        <h1>Hello, {getGreeting(name)}</h1>
-        <h1>Hello, {getGreeting(null)}</h1>
-        <a href='#' title={name}>name</a>
-        <div>{title}</div>
-        {/*<div dangerouslySetInnerHTML={{__html: title}} />*/}
+        <Greeting increment={() => setCount(count + 1)} />
+        <h1>Hello, {count}</h1>
     </>);
 }
 
